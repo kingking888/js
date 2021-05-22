@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+
+var debugflag = false;
+
+  endebug(false, function () {
+      document.write('检测到非法调试, 请关闭调试终端后刷新本页面重试!');
+      document.write("<br/>");
+      document.write("Welcome for People, Not Welcome for Machine!");
+      debugflag = true;
+  });
+  txsdefwsw();
+  document.onkeydown = function() {
+    if ((e.ctrlKey) && (e.keyCode == 83)) {
+      alert("检测到非法调试，CTRL + S被管理员禁用");
+      return false;
+    }
+  }
+  document.onkeydown = function() {
+    var e = window.event || arguments[0];
+    if (e.keyCode == 123) {
+      alert("检测到非法调试，F12被管理员禁用");
+      return false;
+    }
+  }
+  document.oncontextmenu = function() {
+    alert('检测到非法调试，右键被管理员禁用');
+    return false;
+  }
+	$(function()
+	{
+		if (!debugflag && !window.navigator.webdriver) {
+      loadTab();
+    }
+		if(!isSupportCanvas())
+		{
+			$("#browertip").show();
+		}
+	});
+
+	function isSupportCanvas()
+	{
+	   var elem = document.createElement('canvas');
+	   return !!(elem.getContext && elem.getContext('2d'));
+	}
+	</script>
+</body>
+</html>

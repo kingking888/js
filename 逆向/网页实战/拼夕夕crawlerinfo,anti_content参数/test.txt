@@ -1,0 +1,93 @@
+第一次请求：
+    GET /search_catgoods.html?o
+    pt_id=10482
+    HTTP/1.1
+
+    Cookie:
+    PDDAccessToken=IQH2FXPXYLREGOZDQMOHEHNS2LENH5FXFEZK63FPMV7MUEZAXVBQ111818a
+
+    Set-Cookie:
+    pdd_user_id=4109131950465; Path=/; Expires=Sun, 15 Aug 2021 07:53:33 GMT
+    pdd_user_uin=HDZ5TXVN3A4QJ7IG6BUSOTEDNI_GEXDA; Path=/; Expires=Sun, 15 Aug 2021 07:53:33 GMT
+    pdd_vds=gaxJlWbhOqGXGHLpIYOqmFxqxYyvyYnXGhnpECbqnHLpGJoJGqLpwMIHyWlF; Expires=Fri, 14-May-21 07:53:33 GMT; Path=/
+    api_uid=Ck6OnGCU8f0hJQBVfrHEAg==; expires=Thu, 31-Dec-37 23:55:55 GMT; domain=.yangkeduo.com; path=/
+
+总结：pt_id是某品类的id,cookie是登录后的生成值,response返回值在window.rawData
+
+
+第二次请求:
+    GET /proxy/api/api/search/opt/10482/groups?
+    pdduid=4109131950465
+    &source=search
+    &flip=20%3B4%3B0%3B0%3Bd232f295-4e47-4421-94b3-699a6f4f62e1
+    &offset=20
+    &count=20
+    &list_id=4FdAKhHXVR
+    &sort=default
+    &filter=
+    &anti_content=0apWfqnUYjoyy99ZMQZVwvFnZ9phUBzaGLGCWuYmv_G-n1xFLe16JBMLlabNpS8SW8bjPD-PTa47f4L9EN9Xw2pgvf5kl_0bZuVOmBpV_T9i9YoNarQlDE_v03WT7lNQjXTF8iSL5TrLwCjy5ujCQs7me9C-oIzchlqYBrIW5K0SF_DYu_5Bu8l12mtzsisH9UUDuUtZkpY-_DEDEfGkh7vYiKPMHdzFnRCQn1RAT63WCuDKVpm-FgZnZBgZSv0FAeDfFpB_uU2qmmTRJdYf_nuH2daObK6N5sQgIkU0etMUi9ML6nxzPBtF5FxnN2l-5E_l9H8Wt-UaiPX911rrcj2TY1PR0P4dZwh3wmKxPzXP3JDBc_XeaymVUcOYVHRrJEpiGnh3vlC4MVYVwRKFnnW9CA6ocVTx6DG29XWelTaRQsTMNNhH2cck49mw3QVyNhAf_Ft1JlQYM6OU7rCSxAhA8C_mHipE5cjiNoKq1hc2DhNk2YgaiYx6mWCipm0Qn8cNM1pQLVSaSA5FEvrwpr7MRnfYNSr8CBV3imUkQuoVV7va7cNPgOT
+    &opt_source=search_opt_goods
+    HTTP/1.1
+参数来源解析:第一次的返回值window.rawData包含nextRequestParams信息
+"nextRequestParams": {
+    "source": "search",
+    "flip": "20;4;0;0;d232f295-4e47-4421-94b3-699a6f4f62e1",
+    "offset": 20,
+    "count": 20,
+    "list_id": "4FdAKhHXVR",
+    "sort": "default",
+    "filter": ""
+},
+pdduid可以从cookie获取,anti_content参数加密,opt_source固定参数
+
+    Referer:
+    http://mobile.yangkeduo.com/search_catgoods.html?opt_id=10482
+此后的请求固定了该Referer
+
+    AccessToken:
+    IQH2FXPXYLREGOZDQMOHEHNS2LENH5FXFEZK63FPMV7MUEZAXVBQ111818a
+可以从cookie截取
+
+    Cookie:
+    PDDAccessToken=IQH2FXPXYLREGOZDQMOHEHNS2LENH5FXFEZK63FPMV7MUEZAXVBQ111818a;
+    pdd_user_id=4109131950465;
+    pdd_user_uin=HDZ5TXVN3A4QJ7IG6BUSOTEDNI_GEXDA;
+    api_uid=Ck6OnGCU8f0hJQBVfrHEAg==;
+    _nano_fp=XpExX0X8n09an5P8no_Ir0NQXnNR5926bMib5JRw;
+    webp=1;
+    pdd_vds=gaLMNqOCohtpyqyvOvPHOHnCGvPXmhIMNCPXaHyfQhopQCIHOMmCEYIfLrIp
+cookie中webp固定值，_nano_fp在anti_content参数生成过程生成的，pdd_vds	可更新也可不，通过访问/csr/comm_prefetch_goods.html返回相应cookie
+
+
+    Set-Cookie:
+    JSESSIONID=6FCE2C9CC292F77189A450E1EC855037; Path=/; HttpOnly
+
+第三次请求:
+	GET /proxy/api/api/search/opt/10482/groups?
+	pdduid=4109131950465
+	&source=search
+	&flip=40%3B3%3B0%3B20%3Bd232f295-4e47-4421-94b3-699a6f4f62e1
+	&offset=40
+	&count=20
+	&list_id=4FdAKhHXVR
+	&sort=default
+	&filter=
+	&anti_content=0apWtql5rjhyy22V4nasVcfm00sA2lgGKBiBiRArkDf-55jbqklvJr5dls3uWtdrgomuzhrzD7QrwOV-FHAV4A2X0afPK2_2woGVnd0fi0448gLZh9rH-eH-WIShY9pOLzqooiLICaL9HjvmSj7T-3rRzQ1VQR6NczOZPMWH61DXPyW47Htx6aWdTDFQ1DxcVZelV3Pe3mT1taOjg0TKNuqqvANyF2wM97G9Pk8cTrZ3o-j3xrBQUwwt1VVmBPUfDtjI4Oefc8VAQAFJCcYOCD60pb7jCHifhYGwx3Bd0nI4gvTKdEwb7Go2fzt_xpoVfyF5et4b69xE0QLKWKvjXDukiJQ2xgxWwgOegqEGL2kkUfQlllpKeHjpjVwT6zd-oB9jySlpjIB4YjdwfOtOMnGQ71SuXoo5WjAec71JRvRuEuTdoRrCPvgf8VZPzFseFKhmUCSc0CO3SlY0FQJ9RdBlPlD6rl6bR8zAi7qiDz9398U6pouDQ0PoAd8mGWdcfWillbOyMter1AgbAMZpB1lTx7EYSD-DLWA3GgmAO14cTFEZ_5zX8cNfsO9
+	&opt_source=search_opt_goods
+	HTTP/1.1
+参数来源解析:anti_content加密生成，flip上一层返回值中获取，其他不变
+
+	Cookie:
+	PDDAccessToken=IQH2FXPXYLREGOZDQMOHEHNS2LENH5FXFEZK63FPMV7MUEZAXVBQ111818a;
+	pdd_user_id=4109131950465;
+	pdd_user_uin=HDZ5TXVN3A4QJ7IG6BUSOTEDNI_GEXDA;
+	api_uid=Ck6OnGCU8f0hJQBVfrHEAg==;
+	_nano_fp=XpExX0X8n09an5P8no_Ir0NQXnNR5926bMib5JRw;
+	webp=1;
+	pdd_vds=gaLMNqOCohtpyqyvOvPHOHnCGvPXmhIMNCPXaHyfQhopQCIHOMmCEYIfLrIp;
+	JSESSIONID=6FCE2C9CC292F77189A450E1EC855037
+JSESSIONID第二次请求返回的cookie值
+
+	Set-Cookie:
+	JSESSIONID=2D7D95E3021C0FF7A846645376A2B388; Path=/; HttpOnly
+
