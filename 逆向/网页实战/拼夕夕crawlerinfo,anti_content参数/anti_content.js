@@ -3839,4 +3839,4 @@ console.log(get_anti_content(cookies, url, useragent ));
 
 //todo:更改过两处，一出是cookie添加，另一处是hasOwnProperty和in不同导致的e值不同,以及更改异步调用
 
-
+new Proxy()
