@@ -6,9 +6,16 @@
 
 """
 采用asyncio形式则更换reactor
+如下:
 import asyncio
 from twisted.internet import asyncioreactor
+from scrapy import cmdline
+
 asyncioreactor.install(asyncio.get_event_loop())
+
+if __name__ == '__main__':
+    cmdline.execute("scrapy crawl httpbin".split())
+
 """
 import asyncio
 import aiohttp
@@ -43,7 +50,7 @@ class AsyncioMiddleware:
         return middleware
 
     async def _process_request(self, request, spider):
-        connector = ProxyConnector.from_url('socks5://user:password@127.0.0.1:1080')
+        connector = ProxyConnector.from_url('socks5://xxx.xxx.xxx.xxx:xxx')
         ### or use ProxyConnector constructor
         # connector = ProxyConnector(
         #     proxy_type=ProxyType.SOCKS5,
@@ -62,12 +69,12 @@ class AsyncioMiddleware:
         # ])
         async with aiohttp.ClientSession(connector=connector) as session:
             async with session.get(request.url) as response:
-                # await response.text()
+                content = await response.read()
                 response = HtmlResponse(
                     request.url,
                     status=response.status,
                     headers=response.headers,
-                    body=response.content,
+                    body=content,
                     encoding=response.get_encoding(),
                     request=request
                 )
