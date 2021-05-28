@@ -3,6 +3,13 @@
 # @date     : 2021/5/28
 # @File     : asyncio_middleware.py
 # @Software : PyCharm
+
+"""
+采用asyncio形式则更换reactor
+import asyncio
+from twisted.internet import asyncioreactor
+asyncioreactor.install(asyncio.get_event_loop())
+"""
 import asyncio
 import aiohttp
 from scrapy import signals
