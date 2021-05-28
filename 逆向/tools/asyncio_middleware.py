@@ -16,7 +16,7 @@ from scrapy import signals
 from scrapy.http import HtmlResponse
 from twisted.internet.defer import Deferred
 from scrapy.http import Request
-from aiosocksy.connector import ProxyConnector, ProxyClientRequest
+from aiohttp_socks import ProxyConnector
 
 
 def as_deferred(f):
@@ -43,11 +43,26 @@ class AsyncioMiddleware:
         return middleware
 
     async def _process_request(self, request, spider):
-        connector = ProxyConnector()
-        socks = 'socks5://127.0.0.1:12377'
-        async with aiohttp.ClientSession(connector=connector, request_class=ProxyClientRequest) as session:
-            async with session.get(request.url, proxy=socks) as response:
-                print(await response.text())
+        connector = ProxyConnector.from_url('socks5://user:password@127.0.0.1:1080')
+        ### or use ProxyConnector constructor
+        # connector = ProxyConnector(
+        #     proxy_type=ProxyType.SOCKS5,
+        #     host='127.0.0.1',
+        #     port=1080,
+        #     username='user',
+        #     password='password',
+        #     rdns=True
+        # )
+
+        ### proxy chaining (since ver 0.3.3)
+        # connector = ChainProxyConnector.from_urls([
+        #     'socks5://user:password@127.0.0.1:1080',
+        #     'socks4://127.0.0.1:1081',
+        #     'http://user:password@127.0.0.1:3128',
+        # ])
+        async with aiohttp.ClientSession(connector=connector) as session:
+            async with session.get(request.url) as response:
+                # await response.text()
                 response = HtmlResponse(
                     request.url,
                     status=response.status,
