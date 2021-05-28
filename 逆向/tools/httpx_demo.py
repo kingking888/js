@@ -26,7 +26,7 @@ async def get():
         "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"
     }
 
-    async with httpx.AsyncClient(http2=True, proxies="http://127.0.0.1:8888", verify=False) as client:
+    async with httpx.AsyncClient(http2=True, verify=False) as client:
         response = await client.get('https://www.lazada.com.my/shop-electronic-cigarettes/?ajax=true&page=5', headers=headers)
         print(response.http_version)  # "HTTP/1.0", "HTTP/1.1", or "HTTP/2".
         print(response.text)
