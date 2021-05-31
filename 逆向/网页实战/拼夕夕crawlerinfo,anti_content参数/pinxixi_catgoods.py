@@ -13,12 +13,14 @@ import copy
 import time
 import random
 from pymongo.operations import UpdateOne
-from pinxixi_search_catgoods import get_local_time, get_js, get_anti_info, get_cookie_to_str, MongoClient, Logger
+from crawers.pdd.pinxixi_search_catgoods import get_local_time, get_js, get_anti_info, get_cookie_to_str, MongoClient, \
+    Logger
 
 
 class Pinduoduo:
     def __init__(self, hub_url, base_url, token, useragent):
         self.hub_url = hub_url
+        self.opt_id = re.findall('opt_id=(\d+)', self.hub_url)
         self.base_url = base_url
         self.token = token
         self.useragent = useragent
@@ -57,7 +59,7 @@ class Pinduoduo:
             first_origin_data = re.findall('window\.rawData=(.*?);\s', first_res)[0]
             first_json_data = json.loads(first_origin_data)
 
-            product_list_info = first_json_data['store']['tabListMap']['307']['tabGoodsList']['list']
+            product_list_info = first_json_data['store']['tabListMap'][self.opt_id]['tabGoodsList']['list']
             self.save_data(product_list_info)
         except Exception as e:
             print(e)
@@ -76,7 +78,7 @@ class Pinduoduo:
         self.current_page += 1
         # todo:添加访问参数,offset,opt_type相关参数请从网页核对
         second_request_params = {"offset": 40, "count": 20, 'page_sn': '10028', 'support_types': '0_4', 'opt_type': 2}
-        second_request_params["list_id"] = first_json_data['store']['tabListMap']['307']['tabGoodsList']['listId']
+        second_request_params["list_id"] = first_json_data['store']['tabListMap'][self.opt_id]['tabGoodsList']['listId']
         second_request_params['opt_id'] = first_json_data['store']['currentOptId']
         second_request_params['pdduid'] = self.session.cookies.get('pdd_user_id')
         cookie_str_2 = get_cookie_to_str(self.session.cookies)
@@ -156,9 +158,17 @@ if __name__ == '__main__':
     # pinduoduo = Pinduoduo(hub_url, base_url, AccessToken, useragent)
     # pinduoduo.main()
 
-    hub_url = 'http://mobile.yangkeduo.com/catgoods.html?opt_id=307&opt_type=2'
+    # hub_url = 'http://mobile.yangkeduo.com/catgoods.html?opt_id=307&opt_type=2'
+    # base_url = 'http://mobile.yangkeduo.com/proxy/api/api/caterham/query/subfenlei_gyl_label?'
+    # AccessToken = "6K3PJOCST2BOHNLI5Y5ONGGHMWBKKEFCE6LTBQ5YCYHTCPZ6SL7Q110e3bb"
+    # useragent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"
+    # pinduoduo = Pinduoduo(hub_url, base_url, AccessToken, useragent)
+    # pinduoduo.main()
+
+    # 泳装用品
+    hub_url = 'http://yangkeduo.com/catgoods.html?refer_page_name=index&opt_id=1458&opt_type=2'
     base_url = 'http://mobile.yangkeduo.com/proxy/api/api/caterham/query/subfenlei_gyl_label?'
-    AccessToken = "6K3PJOCST2BOHNLI5Y5ONGGHMWBKKEFCE6LTBQ5YCYHTCPZ6SL7Q110e3bb"
+    AccessToken = "PZPYE676LIMWFLTIQHFM6SYVGVR5CZ7LHEFJJTI6PFTBQT3TDG4A110e3bb"
     useragent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36"
     pinduoduo = Pinduoduo(hub_url, base_url, AccessToken, useragent)
     pinduoduo.main()
