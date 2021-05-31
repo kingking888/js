@@ -20,7 +20,7 @@ from crawers.pdd.pinxixi_search_catgoods import get_local_time, get_js, get_anti
 class Pinduoduo:
     def __init__(self, hub_url, base_url, token, useragent):
         self.hub_url = hub_url
-        self.opt_id = re.findall('opt_id=(\d+)', self.hub_url)
+        self.opt_id = re.findall('opt_id=(\d+)', self.hub_url)[0]
         self.base_url = base_url
         self.token = token
         self.useragent = useragent
